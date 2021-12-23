@@ -1,0 +1,55 @@
+---
+title: "Lake Data"
+output: 
+      # html_document: default
+      # pdf_document: default
+       github_document: default
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+library(dplyr)
+library(ggplot2)
+lake_data <- read.csv(here::here("lakedata.csv")) %>% na.omit()
+
+colnames(lake_data)
+
+lake_data <- lake_data %>%
+  mutate(ObsDate = as.Date(paste0(Year, "-", Month, "-", Day), format = "%y-%m-%d")) %>%
+  filter(Year > 20) %>%
+  mutate(DepthDown = -1 * Depth,
+         Percent = as.numeric(Percent))
+
+theme_set(theme_bw())
+```
+
+
+Collected by Katie Diaz et al., 2017-2021.
+
+Visualizations by RMD.
+
+
+# Dissolved Oxygen
+
+```{r DO, fig.dim = c(8,5)}
+
+ggplot(lake_data, aes(ObsDate, DepthDown, color = DO)) + geom_point(size = 4) + scale_color_viridis_c(option = "mako") + ggtitle("Dissolved Oxygen")
+
+```
+
+# Temperature
+```{r temp, fig.dim = c(8,5)}
+
+ggplot(lake_data, aes(ObsDate, DepthDown, color = Temp)) + geom_point(size = 4) + scale_color_viridis_c(option = "turbo") + ggtitle("Temperature")
+
+```
+
+# %
+
+```{r percent, fig.dim = c(8,5)}
+
+ggplot(lake_data, aes(ObsDate, DepthDown, color = Percent)) + geom_point(size = 4) + scale_color_viridis_c(option = "plasma") + ggtitle("%")
+
+
+```
